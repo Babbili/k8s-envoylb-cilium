@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/Babbili/k8s-envoylb-cilium/goapp/proto"
+	pb "github.com/Babbili/k8s-envoylb-cilium/goappclient/proto"
 	"google.golang.org/grpc"
 )
 
