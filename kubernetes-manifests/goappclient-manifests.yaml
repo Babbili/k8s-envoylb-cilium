@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apps
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: goappclient
+  name: goappclient
+  namespace: apps
+spec:
+  selector:
+    matchLabels:
+      app: goappclient
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: goappclient
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        runAsGroup: 3000
+        fsGroup: 2000
+      containers:
+        - name: goappclient
+          image: babbili/k8s-envoylb-goappclient:6aea9c1d
+          imagePullPolicy : Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          ports:
+          - containerPort: 50051
+      serviceAccount: goappclient
+      serviceAccountName: goappclient
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: goappclient
+  namespace: apps
+  labels:
+    app: goappclient
+spec:
+  type: ClusterIP
+  selector:
+    app: goappclient
+  ports:
+    - name: grpc
+      port: 50051
+      targetPort: 50051
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: goappclient
+  name: goappclient
+  namespace: apps
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: goappclient-svca-token
+  namespace: apps
+  annotations:
+    kubernetes.io/service-account.name: "goappclient"
+type: kubernetes.io/service-account-token
