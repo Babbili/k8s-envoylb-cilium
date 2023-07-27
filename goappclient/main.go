@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	address = "127.0.0.1:50051"
+	address = "goappserver.apps.svc.cluster.local:50051"
 )
 
 func main() {
