@@ -51,7 +51,7 @@ spec:
               cpu: 200m
               memory: 128Mi
           ports:
-          - containerPort: 50051
+          - containerPort: 5000
       serviceAccount: goappclient
       serviceAccountName: goappclient
 
@@ -70,8 +70,8 @@ spec:
     app: goappclient
   ports:
     - name: grpc
-      port: 50051
-      targetPort: 50051
+      port: 5000
+      targetPort: 5000
 
 ---
 
