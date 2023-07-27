@@ -35,4 +35,5 @@ func main() {
 		}
 		log.Printf(`User Details: NAME: %s, AGE: %d, ID: %d`, r.GetName(), r.GetAge(), r.GetId())
 	}
+	time.Sleep(1 * time.Hour)
 }
