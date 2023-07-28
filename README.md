@@ -83,3 +83,16 @@ Containers:            cilium             Running: 4
 
 ```
 
+Verify `KubeProxyReplacement` and Envoy L7 Load-Balancing enabled
+
+```bash
+cilium config view | grep -w "kube-proxy"
+cilium config view | grep envoy
+
+# ------ output ---
+kube-proxy-replacement                            strict
+kube-proxy-replacement-healthz-bind-address
+enable-envoy-config                               true
+external-envoy-proxy                              false
+loadbalancer-l7                                   envoy
+```
