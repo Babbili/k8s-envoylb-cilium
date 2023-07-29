@@ -58,9 +58,9 @@ rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 
 **enable Hubble**
 ```bash
-cilium huble enable
+cilium hubble enable
 ```
-Hubble is the observability layer of Cilium and can be used to obtain cluster-wide visibility into the network and security layer of your Kubernetes cluster
+Hubble is the networking and security observability layer of Cilium
 
 
 ### validate that Cilium has been properly installed
@@ -71,7 +71,7 @@ cilium status --wait
     /¯¯\
  /¯¯\__/¯¯\    Cilium:             OK
  \__/¯¯\__/    Operator:           OK
- /¯¯\__/¯¯\    Envoy DaemonSet:    OK (using embedded mode)
+ /¯¯\__/¯¯\    Envoy DaemonSet:    disabled (using embedded mode)
  \__/¯¯\__/    Hubble Relay:       OK
     \__/       ClusterMesh:        disabled
 
@@ -93,6 +93,23 @@ cilium config view | grep envoy
 kube-proxy-replacement                            strict
 kube-proxy-replacement-healthz-bind-address
 enable-envoy-config                               true
-external-envoy-proxy                              false
+external-envoy-proxy                              false # if set to true Cilium will deploy a seperate managed Envoy Proxy DaemonSet (deault to false, Cilium deploys embedding Envoy Proxy as a seperate proccess)
 loadbalancer-l7                                   envoy
 ```
+
+<br />
+
+## Deploy gRPC Go application
+
+```bash
+kubectl apply -f kubernetes-manifests/goappserver-manifests.yaml
+kubectl apply -f kubernetes-manifests/goappclient-manifests.yaml
+```
+
+*the Go application is goapp client and a server communicating through gRPC. It's expandable to list more services and their messages in `protos/apps.proto` file, then generate Protocol Buffer files with `protoc` command which i included in `proto.sh` files*
+
+
+Annotate Kubernetes services with `io.cilium.service/lb-l7=enabled` 
+
+
+

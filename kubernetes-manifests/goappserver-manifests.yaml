@@ -64,6 +64,8 @@ metadata:
   namespace: apps
   labels:
     app: goappserver
+  annotations:
+    io.cilium.service/lb-l7: enabled
 spec:
   type: ClusterIP
   selector:
