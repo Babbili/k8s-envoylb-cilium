@@ -112,4 +112,25 @@ kubectl apply -f kubernetes-manifests/goappclient-manifests.yaml
 Annotate Kubernetes services with `io.cilium.service/lb-l7=enabled` 
 
 
+```bash
+kubectl get cec
+# CiliumEnvoyConfig CRDs are created
+
+NAME                                    AGE
+cilium-envoy-lb-goappclient             112s
+cilium-envoy-lb-goappserver             112s
+```
+
+
+If we observe traffic with `Hubble` it's forwarded to Envoy Proxy
+```bash
+hubble observe --type trace:to-proxy
+
+# ------- output --
+Jul 29 13:13:59.833: apps/goappclient-7dccb64ff6-tmbjz:5000 (ID:13125) -> apps/goappserver-ccbc788bc-gqr4c:50051 (ID:63131) to-proxy FORWARDED (TCP Flags: SYN)
+Jul 29 13:13:59.833: apps/goappclient-7dccb64ff6-tmbjz:5000 (ID:13125) -> apps/goappserver-ccbc788bc-gqr4c:50051 (ID:63131) to-proxy FORWARDED (TCP Flags: ACK)
+Jul 29 13:13:59.833: apps/goappclient-7dccb64ff6-tmbjz:5000 (ID:13125) -> apps/goappserver-ccbc788bc-gqr4c:50051 (ID:63131) to-proxy FORWARDED (TCP Flags: ACK, PSH)
+...
+```
+
 
